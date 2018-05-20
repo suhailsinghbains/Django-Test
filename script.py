@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.conf.urls.defaults import *
 
-def hello(request):
-    return HttpResponse("Hello world")
+urlpatterns = patterns('',
+)
