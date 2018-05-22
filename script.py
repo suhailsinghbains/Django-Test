@@ -1,6 +1,6 @@
-from django.conf.urls.defaults import *
-from mysite.views import hello
+from mysite.views import hello, my_homepage_view
 
 urlpatterns = patterns('',
-    ('^hello/$', hello),
+    ('^$', my_homepage_view),
+    # ...
 )
