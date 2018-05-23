@@ -1,6 +1,7 @@
-from mysite.views import hello, my_homepage_view
+from django.http import HttpResponse
+import datetime
 
-urlpatterns = patterns('',
-    ('^$', my_homepage_view),
-    # ...
-)
+def current_datetime(request):
+    now = datetime.datetime.now()
+    html = "<html><body>It is now %s.</body></html>" % now
+    return HttpResponse(html)
