@@ -1,10 +1,7 @@
-from django.http import HttpResponse
-import datetime
+from django.conf.urls.defaults import *
+from mysite.views import hello, current_datetime
 
-def hello(request):
-    return HttpResponse("Hello world")
-
-def current_datetime(request):
-    now = datetime.datetime.now()
-    html = "<html><body>It is now %s.</body></html>" % now
-    return HttpResponse(html)
+urlpatterns = patterns('',
+    ('^hello/$', hello),
+    ('^time/$', current_datetime),
+)
