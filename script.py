@@ -4,6 +4,10 @@ import datetime
 
 def current_datetime(request):
     now = datetime.datetime.now()
-    t = Template("<html><body>It is now {{ current_date }}.</body></html>")
+    # Simple way of using templates from the filesystem.
+    # This is BAD because it doesn't account for missing files!
+    fp = open('/home/djangouser/templates/mytemplate.html')
+    t = Template(fp.read())
+    fp.close()
     html = t.render(Context({'current_date': now}))
     return HttpResponse(html)
