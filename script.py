@@ -1,6 +1,10 @@
 from django.shortcuts import render_to_response
-import datetime
+import MySQLdb
 
-def current_datetime(request):
-    now = datetime.datetime.now()
-    return render_to_response('current_datetime.html', {'current_date': now})
+def book_list(request):
+    db = MySQLdb.connect(user='me', db='mydb', passwd='secret', host='localhost')
+    cursor = db.cursor()
+    cursor.execute('SELECT name FROM books ORDER BY name')
+    names = [row[0] for row in cursor.fetchall()]
+    db.close()
+    return render_to_response('book_list.html', {'names': names})
