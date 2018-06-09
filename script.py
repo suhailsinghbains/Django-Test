@@ -1,10 +1,20 @@
-from django.shortcuts import render_to_response
-import MySQLdb
+from django.db import models
 
-def book_list(request):
-    db = MySQLdb.connect(user='me', db='mydb', passwd='secret', host='localhost')
-    cursor = db.cursor()
-    cursor.execute('SELECT name FROM books ORDER BY name')
-    names = [row[0] for row in cursor.fetchall()]
-    db.close()
-    return render_to_response('book_list.html', {'names': names})
+class Publisher(models.Model):
+    name = models.CharField(max_length=30)
+    address = models.CharField(max_length=50)
+    city = models.CharField(max_length=60)
+    state_province = models.CharField(max_length=30)
+    country = models.CharField(max_length=50)
+    website = models.URLField()
+
+class Author(models.Model):
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=40)
+    email = models.EmailField()
+
+class Book(models.Model):
+    title = models.CharField(max_length=100)
+    authors = models.ManyToManyField(Author)
+    publisher = models.ForeignKey(Publisher)
+    publication_date = models.DateField()
