@@ -1,7 +1,24 @@
-def display_meta(request):
-    values = request.META.items()
-    values.sort()
-    html = []
-    for k, v in values:
-        html.append('<tr><td>%s</td><td>%s</td></tr>' % (k, v))
-    return HttpResponse('<table>%s</table>' % '\n'.join(html))
+from django.core.mail import send_mail
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+from django.template import RequestContext
+
+def contact(request):
+    errors = []
+    if request.method == 'POST':
+        if not request.POST.get('subject', ''):
+            errors.append('Enter a subject.')
+        if not request.POST.get('message', ''):
+            errors.append('Enter a message.')
+        if request.POST.get('email') and '@' not in request.POST['email']:
+            errors.append('Enter a valid e-mail address.')
+        if not errors:
+            send_mail(
+                request.POST['subject'],
+                request.POST['message'],
+                request.POST.get('email', 'noreply@example.com'),
+                ['siteowner@example.com'],
+            )
+            return HttpResponseRedirect('/contact/thanks/')
+    return render(request, 'contact_form.html',
+        {'errors': errors}, context_instance=RequestContext(request))
