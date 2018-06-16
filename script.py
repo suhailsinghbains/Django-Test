@@ -1,50 +1,6 @@
-from django.core.mail import send_mail
-from django.http import HttpResponseRedirect
-from django.shortcuts import render
-from django.template import RequestContext
+from django import forms
 
-def contact(request):
-    errors = []
-    if request.method == 'POST':
-        if not request.POST.get('subject', ''):
-            errors.append('Enter a subject.')
-        if not request.POST.get('message', ''):
-            errors.append('Enter a message.')
-        if request.POST.get('email') and '@' not in request.POST['email']:
-            errors.append('Enter a valid e-mail address.')
-        if not errors:
-            send_mail(
-                request.POST['subject'],
-                request.POST['message'],
-                request.POST.get('email', 'noreply@example.com'),
-                ['siteowner@example.com'],
-            )
-            return HttpResponseRedirect('/contact/thanks/')
-    return render(request, 'contact_form.html',
-        {'errors': errors}, context_instance=RequestContext(request))
-
-# contact_form.html
-
-<html>
-<head>
-    <title>Contact us</title>
-</head>
-<body>
-    <h1>Contact us</h1>
-
-    {% if errors %}
-        <ul>
-            {% for error in errors %}
-            <li>{{ error }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-
-    <form action="/contact/" method="post">
-        <p>Subject: <input type="text" name="subject" value="{{ subject }}"></p>
-        <p>Your e-mail (optional): <input type="text" name="email" value="{{ email }}"></p>
-        <p>Message: <textarea name="message" rows="10" cols="50">**{{ message }}**</textarea></p>
-        <input type="submit" value="Submit">
-    </form>
-</body>
-</html>
+class ContactForm(forms.Form):
+    subject = forms.CharField(max_length=100)
+    email = forms.EmailField(required=False)
+    message = forms.CharField(widget=forms.Textarea)
