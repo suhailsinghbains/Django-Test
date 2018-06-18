@@ -1,6 +1,11 @@
-from django import forms
+from django.conf.urls.defaults import *
 
-class ContactForm(forms.Form):
-    subject = forms.CharField(max_length=100)
-    email = forms.EmailField(required=False, label='Your e-mail address')
-    message = forms.CharField(widget=forms.Textarea)
+urlpatterns = patterns('mysite.views',
+    (r'^hello/$', 'hello'),
+    (r'^time/$', 'current_datetime'),
+    (r'^time/plus/(\d{1,2})/$', 'hours_ahead'),
+)
+
+urlpatterns += patterns('weblog.views',
+    (r'^tag/(\w+)/$', 'tag'),
+)
