@@ -1,7 +1,22 @@
+# urls.py
+
 from django.conf.urls.defaults import *
 from mysite import views
 
 urlpatterns = patterns('',
-    (r'^articles/(?P<year>\d{4})/$', views.year_archive),
-    (r'^articles/(?P<year>\d{4})/(?P<month>\d{2})/$', views.month_archive),
+    (r'^foo/$', views.foo_view),
+    (r'^bar/$', views.bar_view),
 )
+
+# views.py
+
+from django.shortcuts import render
+from mysite.models import MyModel
+
+def foo_view(request):
+    m_list = MyModel.objects.filter(is_new=True)
+    return render(request, 'template1.html', {'m_list': m_list})
+
+def bar_view(request):
+    m_list = MyModel.objects.filter(is_new=True)
+    return render(request, 'template2.html', {'m_list': m_list})
