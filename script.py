@@ -1,14 +1,15 @@
 from django.conf.urls.defaults import *
 
 urlpatterns = patterns('',
-    (r'^(?P<username>\w+)/blog/', include('foo.urls.blog')),
+    (r'^blog/', include('inner'), {'blogid': 3}),
 )
 
-# foo/urls/blog.py
+# inner.py
 
 from django.conf.urls.defaults import *
 
 urlpatterns = patterns('',
-    (r'^$', 'foo.views.blog_index'),
-    (r'^archive/$', 'foo.views.blog_archive'),
+    (r'^archive/$', 'mysite.views.archive'),
+    (r'^about/$', 'mysite.views.about'),
+    (r'^rss/$', 'mysite.views.rss'),
 )
