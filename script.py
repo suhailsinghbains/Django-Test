@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import *
 
 urlpatterns = patterns('',
-    (r'^blog/', include('inner'), {'blogid': 3}),
+    (r'^blog/', include('inner')),
 )
 
 # inner.py
@@ -9,7 +9,7 @@ urlpatterns = patterns('',
 from django.conf.urls.defaults import *
 
 urlpatterns = patterns('',
-    (r'^archive/$', 'mysite.views.archive'),
-    (r'^about/$', 'mysite.views.about'),
-    (r'^rss/$', 'mysite.views.rss'),
+    (r'^archive/$', 'mysite.views.archive', {'blogid': 3}),
+    (r'^about/$', 'mysite.views.about', {'blogid': 3}),
+    (r'^rss/$', 'mysite.views.rss', {'blogid': 3}),
 )
