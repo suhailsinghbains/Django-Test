@@ -1,15 +1,9 @@
-from django.conf.urls.defaults import *
+from django.http import Http404
+from django.template import TemplateDoesNotExist
+from django.views.generic.simple import direct_to_template
 
-urlpatterns = patterns('',
-    (r'^blog/', include('inner')),
-)
-
-# inner.py
-
-from django.conf.urls.defaults import *
-
-urlpatterns = patterns('',
-    (r'^archive/$', 'mysite.views.archive', {'blogid': 3}),
-    (r'^about/$', 'mysite.views.about', {'blogid': 3}),
-    (r'^rss/$', 'mysite.views.rss', {'blogid': 3}),
-)
+def about_pages(request, page):
+    try:
+        return direct_to_template(request, template="about/%s.html" % page)
+    except TemplateDoesNotExist:
+        raise Http404()
