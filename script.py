@@ -1,19 +1,19 @@
-import csv
+from reportlab.pdfgen import canvas
 from django.http import HttpResponse
 
-# Number of unruly passengers each year 1995 - 2005. In a real application
-# this would likely come from a database or some other back-end data store.
-UNRULY_PASSENGERS = [146,184,235,200,226,251,299,273,281,304,203]
+def hello_pdf(request):
+    # Create the HttpResponse object with the appropriate PDF headers.
+    response = HttpResponse(mimetype='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename=hello.pdf'
 
-def unruly_passengers_csv(request):
-    # Create the HttpResponse object with the appropriate CSV header.
-    response = HttpResponse(mimetype='text/csv')
-    response['Content-Disposition'] = 'attachment; filename=unruly.csv'
+    # Create the PDF object, using the response object as its "file."
+    p = canvas.Canvas(response)
 
-    # Create the CSV writer using the HttpResponse as the "file."
-    writer = csv.writer(response)
-    writer.writerow(['Year', 'Unruly Airline Passengers'])
-    for (year, num) in zip(range(1995, 2006), UNRULY_PASSENGERS):
-        writer.writerow([year, num])
+    # Draw things on the PDF. Here's where the PDF generation happens.
+    # See the ReportLab documentation for the full list of functionality.
+    p.drawString(100, 100, "Hello world.")
 
+    # Close the PDF object cleanly, and we're done.
+    p.showPage()
+    p.save()
     return response
