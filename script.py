@@ -1,3 +1,4 @@
+from cStringIO import StringIO
 from reportlab.pdfgen import canvas
 from django.http import HttpResponse
 
@@ -6,14 +7,19 @@ def hello_pdf(request):
     response = HttpResponse(mimetype='application/pdf')
     response['Content-Disposition'] = 'attachment; filename=hello.pdf'
 
-    # Create the PDF object, using the response object as its "file."
-    p = canvas.Canvas(response)
+    temp = StringIO()
+
+    # Create the PDF object, using the StringIO object as its "file."
+    p = canvas.Canvas(temp)
 
     # Draw things on the PDF. Here's where the PDF generation happens.
     # See the ReportLab documentation for the full list of functionality.
     p.drawString(100, 100, "Hello world.")
 
-    # Close the PDF object cleanly, and we're done.
+    # Close the PDF object cleanly.
     p.showPage()
     p.save()
+
+    # Get the value of the StringIO buffer and write it to the response.
+    response.write(temp.getvalue())
     return response
