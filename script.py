@@ -1,14 +1,14 @@
-from django.contrib.syndication.feeds import Feed
-from django.utils.feedgenerator import Atom1Feed
-from mysite.blog.models import Entry
+from django.conf.urls.defaults import *
+from myproject.feeds import RssLatestEntries, AtomLatestEntries
 
-class RssLatestEntries(Feed):
-    title = "My Blog"
-    link = "/archive/"
-    description = "The latest news about stuff."
+feeds = {
+    'rss': RssLatestEntries,
+    'atom': AtomLatestEntries,
+}
 
-    def items(self):
-        return Entry.objects.order_by('-pub_date')[:5]
-
-class AtomLatestEntries(RssLatestEntries):
-    feed_type = Atom1Feed
+urlpatterns = patterns('',
+    # ...
+    (r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed',
+        {'feed_dict': feeds}),
+    # ...
+)
