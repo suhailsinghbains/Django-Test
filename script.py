@@ -1,14 +1,12 @@
-from django.conf.urls.defaults import *
-from myproject.feeds import RssLatestEntries, AtomLatestEntries
+from django.contrib.sitemaps import Sitemap
+from mysite.blog.models import Entry
 
-feeds = {
-    'rss': RssLatestEntries,
-    'atom': AtomLatestEntries,
-}
+class BlogSitemap(Sitemap):
+    changefreq = "never"
+    priority = 0.5
 
-urlpatterns = patterns('',
-    # ...
-    (r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed',
-        {'feed_dict': feeds}),
-    # ...
-)
+    def items(self):
+        return Entry.objects.filter(is_draft=False)
+
+    def lastmod(self, obj):
+        return obj.pub_date
