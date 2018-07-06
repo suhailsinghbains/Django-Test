@@ -1,12 +1,23 @@
-from django.contrib.sitemaps import Sitemap
+from django.conf.urls.defaults import *
+from django.contrib.sitemaps import FlatPageSitemap, GenericSitemap
 from mysite.blog.models import Entry
 
-class BlogSitemap(Sitemap):
-    changefreq = "never"
-    priority = 0.5
+info_dict = {
+    'queryset': Entry.objects.all(),
+    'date_field': 'pub_date',
+}
 
-    def items(self):
-        return Entry.objects.filter(is_draft=False)
+sitemaps = {
+    'flatpages': FlatPageSitemap,
+    'blog': GenericSitemap(info_dict, priority=0.6),
+}
 
-    def lastmod(self, obj):
-        return obj.pub_date
+urlpatterns = patterns('',
+    # some generic view using info_dict
+    # ...
+
+    # the sitemap
+    (r'^sitemap\.xml$',
+     'django.contrib.sitemaps.views.sitemap',
+     {'sitemaps': sitemaps})
+)
