@@ -1,23 +1,12 @@
-from django.conf.urls.defaults import *
-from django.contrib.sitemaps import FlatPageSitemap, GenericSitemap
-from mysite.blog.models import Entry
+from django.contrib.sitemaps import ping_google
 
-info_dict = {
-    'queryset': Entry.objects.all(),
-    'date_field': 'pub_date',
-}
-
-sitemaps = {
-    'flatpages': FlatPageSitemap,
-    'blog': GenericSitemap(info_dict, priority=0.6),
-}
-
-urlpatterns = patterns('',
-    # some generic view using info_dict
+class Entry(models.Model):
     # ...
-
-    # the sitemap
-    (r'^sitemap\.xml$',
-     'django.contrib.sitemaps.views.sitemap',
-     {'sitemaps': sitemaps})
-)
+    def save(self, *args, **kwargs):
+        super(Entry, self).save(*args, **kwargs)
+        try:
+            ping_google()
+        except Exception:
+            # Bare 'except' because we could get a variety
+            # of HTTP-related exceptions.
+            pass
