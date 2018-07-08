@@ -1,12 +1,6 @@
-from django.contrib.sitemaps import ping_google
-
-class Entry(models.Model):
-    # ...
-    def save(self, *args, **kwargs):
-        super(Entry, self).save(*args, **kwargs)
-        try:
-            ping_google()
-        except Exception:
-            # Bare 'except' because we could get a variety
-            # of HTTP-related exceptions.
-            pass
+def show_color(request):
+    if "favorite_color" in request.COOKIES:
+        return HttpResponse("Your favorite color is %s" % \
+            request.COOKIES["favorite_color"])
+    else:
+        return HttpResponse("You don't have a favorite color.")
