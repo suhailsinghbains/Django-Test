@@ -1,13 +1,14 @@
-# Set a session value:
-request.session["fav_color"] = "blue"
+def post_comment(request):
+    if request.method != 'POST':
+        raise Http404('Only POSTs are allowed')
 
-# Get a session value -- this could be called in a different view,
-# or many requests later (or both):
-fav_color = request.session["fav_color"]
+    if 'comment' not in request.POST:
+        raise Http404('Comment not submitted')
 
-# Clear an item from the session:
-del request.session["fav_color"]
+    if request.session.get('has_commented', False):
+        return HttpResponse("You've already commented.")
 
-# Check if the session has a given key:
-if "fav_color" in request.session:
-    ...
+    c = comments.Comment(comment=request.POST['comment'])
+    c.save()
+    request.session['has_commented'] = True
+    return HttpResponse('Thanks for your comment!')
