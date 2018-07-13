@@ -1,23 +1,14 @@
-def login(request):
+from django.contrib import auth
 
-    # If we submitted the form...
-    if request.method == 'POST':
-
-        # Check that the test cookie worked (we set it below):
-        if request.session.test_cookie_worked():
-
-            # The test cookie worked, so delete it.
-            request.session.delete_test_cookie()
-
-            # In practice, we'd need some logic to check username/password
-            # here, but since this is an example...
-            return HttpResponse("You're logged in.")
-
-        # The test cookie failed, so display an error message. If this
-        # were a real site, we'd want to display a friendlier message.
-        else:
-            return HttpResponse("Please enable cookies and try again.")
-
-    # If we didn't post, send the test cookie along with the login form.
-    request.session.set_test_cookie()
-    return render_to_response('foo/login_form.html')
+def login_view(request):
+    username = request.POST.get('username', '')
+    password = request.POST.get('password', '')
+    user = auth.authenticate(username=username, password=password)
+    if user is not None and user.is_active:
+        # Correct password, and the user is marked "active"
+        auth.login(request, user)
+        # Redirect to a success page.
+        return HttpResponseRedirect("/account/loggedin/")
+    else:
+        # Show an error page
+        return HttpResponseRedirect("/account/invalid/")
