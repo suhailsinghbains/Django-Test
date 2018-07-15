@@ -1,6 +1,7 @@
-from django.contrib import auth
+from django.contrib.auth.views import login, logout
 
-def logout_view(request):
-    auth.logout(request)
-    # Redirect to a success page.
-    return HttpResponseRedirect("/account/loggedout/")
+urlpatterns = patterns('',
+    # existing patterns here...
+    (r'^accounts/login/$',  login),
+    (r'^accounts/logout/$', logout),
+)
