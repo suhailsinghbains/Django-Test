@@ -1,7 +1,6 @@
-from django.contrib.auth.views import login, logout
+from django.http import HttpResponseRedirect
 
-urlpatterns = patterns('',
-    # existing patterns here...
-    (r'^accounts/login/$',  login),
-    (r'^accounts/logout/$', logout),
-)
+def my_view(request):
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('/accounts/login/?next=%s' % request.path)
+    # ...
